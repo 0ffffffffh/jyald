@@ -49,8 +49,12 @@ public class FilteredLogSlot {
 	public boolean tryAdd(LogEntry entry) throws Exception {
 		checkDisposed();
 		
+		if (filters.match(entry)) {
+			loggerUi.writeLog(entry);
+			entries.addEntry(entry);
+		}
 		
-		throw new Exception("tryAdd is not implemented yet!");
+		return true;
 	}
 	
 	public void dispose() throws Exception {

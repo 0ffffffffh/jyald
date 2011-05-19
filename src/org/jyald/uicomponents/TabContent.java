@@ -9,8 +9,11 @@ public class TabContent {
 	private TabItem tabPage;
 	private String tabText;
 	private ListView logList;
+	private Thread ownerThread;
 	
 	public TabContent(TabFolder containerObj, String text) {
+		
+		ownerThread = Thread.currentThread();
 		container = containerObj;
 		tabText = text;
 		tabPage = new TabItem(container,SWT.NONE);
@@ -24,6 +27,18 @@ public class TabContent {
 		logList.addColumn("Pid");
 		logList.addColumn("Tag");
 		logList.addColumn("Log Message");
+	}
+	
+	private final boolean asyncAccessRequired() {
+		return Thread.currentThread().getId() != ownerThread.getId();
+	}
+	
+	private void writeLogToList(LogEntry entry) {
+		try {
+			logList.addItem(getLogItemsForLogObject(entry));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private String[] getLogItemsForLogObject(LogEntry log) {
@@ -42,14 +57,19 @@ public class TabContent {
 		tabPage.dispose();
 	}
 	
-	public void writeLog(LogEntry log) {
+	public void writeLog(final LogEntry log) {
 		
-		try {
-			logList.addItem(getLogItemsForLogObject(log));
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (asyncAccessRequired()) {
+			Display disp = Display.getDefault();
+			disp.asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					writeLogToList(log);
+				}
+			});
+		}
+		else {
+			writeLogToList(log);
 		}
 	}
-	
-	
 }

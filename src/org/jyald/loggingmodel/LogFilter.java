@@ -48,6 +48,7 @@ public class LogFilter implements Serializable, IFilterMatchable {
 		String sval = (String)val;
 		
 		if (useRegExp) {
+			//TODO: Implement!
 			return true;
 		}
 		
