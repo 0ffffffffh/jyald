@@ -46,7 +46,7 @@ public class LogcatManager {
 				try {
 					if (item.tryAdd(entry)) {
 						isGeneralEntry.setBool(false);
-						return false;
+						return true;
 					}
 					
 				} catch (Exception e) {}
