@@ -2,23 +2,7 @@ package org.jyald.loggingmodel;
 
 import java.io.Serializable;
 
-enum FilterOperator {
-	Equal,
-	NotEqual,
-	Greater,
-	Lower,
-	GreaterAndEqual,
-	LowerAndEqual,
-	Contains,
-	NotContains
-}
 
-enum FilterSection {
-	LogTypeSection,
-	TagSection,
-	PidSection,
-	MessageSection
-}
 
 public class LogFilter implements Serializable, IFilterMatchable {
 	
@@ -31,6 +15,16 @@ public class LogFilter implements Serializable, IFilterMatchable {
 		oper = op;
 		sect = section;
 		val = value;
+	}
+	
+	public static FilterOperator getFilterOperatorFromInt(int val) {
+		FilterOperator[] ops = FilterOperator.class.getEnumConstants();
+		return ops[val];
+	}
+	
+	public static FilterSection getFilterSectionFromInt(int val) {
+		FilterSection[] sects = FilterSection.class.getEnumConstants();
+		return sects[val];
 	}
 	
 	private boolean doMatchForDebugType(DebugType type) {
@@ -103,6 +97,14 @@ public class LogFilter implements Serializable, IFilterMatchable {
 		}
 		
 		return false;
+	}
+	
+	public void setUseRegex(boolean use) {
+		useRegExp = use;
+	}
+	
+	public final boolean getUseRegex() {
+		return useRegExp;
 	}
 	
 	@Override

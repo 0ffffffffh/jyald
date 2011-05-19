@@ -4,22 +4,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
-enum DebugType {
-	Unknown,
-	Info,
-	Debug,
-	Warning,
-	Error,
-	Verbose
-}
-
 public class LogEntry {
 	
 	private DebugType logType;
 	private String logTag;
 	private int pid;
 	private String logMsg;
+	
+	public static DebugType getDebugTypeFromInt(int val) {
+		DebugType[] types = DebugType.class.getEnumConstants();
+		
+		return types[val];
+	}
 	
 	private DebugType getDebugTypeFromIdentifier(char id) {
 		

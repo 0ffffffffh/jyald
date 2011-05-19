@@ -2,6 +2,7 @@ package org.jyald;
 
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
@@ -10,7 +11,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.jyald.core.LogcatManager;
-import org.jyald.loggingmodel.LogEntry;
+import org.jyald.loggingmodel.FilterList;
+import org.jyald.loggingmodel.LogFilter;
 import org.jyald.uicomponents.TabContent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,11 +48,24 @@ public class MainWindow {
 	}
 
 	protected void onmnFilterManagerClick() {
-		NewFilterDialog dlg = new NewFilterDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		FilterManagerDialog dlg = new FilterManagerDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		dlg.open();
 	}
 	
 	protected void onmnNewFilterClick() {
+		FilterList filterList;
+		
+		AddNewFilterDialog dlg = new AddNewFilterDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		filterList = (FilterList)dlg.open();
+		
+		if (filterList != null) {
+			System.out.print(filterList.getCount());
+		}
+		
+	}
+	
+	protected void onTabContainerResized() {
+		
 		
 	}
 	
@@ -112,6 +127,16 @@ public class MainWindow {
 		mnSetAdb.setText("Set ADB");
 		
 		MenuItem mnAboutMenu = new MenuItem(menu, SWT.NONE);
+		mnAboutMenu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				MessageBox msg = new MessageBox(shlYetAnotherLogcat);
+				msg.setText("About");
+				msg.setMessage("jyald\nauthor: oguz kartal \'11");
+				msg.open();
+			}
+		});
+		
 		mnAboutMenu.setText("About");
 		
 		tbTabContainer = new TabFolder(shlYetAnotherLogcat, SWT.NONE);
@@ -119,9 +144,11 @@ public class MainWindow {
 		tbTabContainer.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
-				
+				onTabContainerResized();
 			}
 		});
+		
+		
 		
 		tbTabContainer.setBounds(10, 10, 403, 222);
 		
@@ -134,6 +161,8 @@ public class MainWindow {
 			
 		} catch (Exception e1) {
 		}
+		
+		LogFilter.getFilterOperatorFromInt(2);
 		
 		
 	}

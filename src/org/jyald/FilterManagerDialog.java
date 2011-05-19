@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
-public class NewFilterDialog extends Dialog {
+public class FilterManagerDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -19,7 +19,7 @@ public class NewFilterDialog extends Dialog {
 	protected List lstUserFilters;
 	
 	
-	public NewFilterDialog(Shell parent, int style) {
+	public FilterManagerDialog(Shell parent, int style) {
 		super(parent, style);
 		setText("Filter Manager");
 	}

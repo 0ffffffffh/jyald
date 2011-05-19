@@ -8,7 +8,7 @@ public class IterableArrayList<E> implements Iterable<E>, Serializable {
 	ArrayList<E> items;
 	
 	public IterableArrayList() {
-		
+		items = new ArrayList<E>();
 	}
 	
 	public void iterate(ArrayListIterateHandler<E> iterator) {
