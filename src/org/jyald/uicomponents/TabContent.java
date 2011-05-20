@@ -11,8 +11,7 @@ public class TabContent {
 	private ListView logList;
 	private Thread ownerThread;
 	
-	public TabContent(TabFolder containerObj, String text) {
-		
+	public TabContent(TabFolder containerObj, String text, boolean selected) {
 		ownerThread = Thread.currentThread();
 		container = containerObj;
 		tabText = text;
@@ -27,6 +26,14 @@ public class TabContent {
 		logList.addColumn("Pid");
 		logList.addColumn("Tag");
 		logList.addColumn("Log Message");
+		
+		if (selected) {
+			container.setSelection(tabPage);
+		}
+	}
+	
+	public TabContent(TabFolder containerObj, String text) {
+		this(containerObj,text,false);
 	}
 	
 	private final boolean asyncAccessRequired() {

@@ -12,8 +12,10 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.jyald.core.LogcatManager;
 import org.jyald.loggingmodel.FilterList;
-import org.jyald.loggingmodel.LogFilter;
+import org.jyald.loggingmodel.UserFilterObject;
 import org.jyald.uicomponents.TabContent;
+import org.jyald.util.IterableArrayList;
+import org.yald.debuglog.Log;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -23,13 +25,14 @@ public class MainWindow {
 	protected Shell shlYetAnotherLogcat;
 	protected TabFolder tbTabContainer;
 	private LogcatManager logcat;
+	private IterableArrayList<UserFilterObject> userFilters;
 	
 	public static void main(String[] args) {
 		try {
 			MainWindow window = new MainWindow();
 			window.open();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace(Log.getPrintStreamInstance());
 		}
 	}
 
@@ -54,12 +57,31 @@ public class MainWindow {
 	
 	protected void onmnNewFilterClick() {
 		FilterList filterList;
+		String name;
+		boolean linkState;
+		UserFilterObject userFilter;
+		TabContent filterLoggerUi;
 		
 		AddNewFilterDialog dlg = new AddNewFilterDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		filterList = (FilterList)dlg.open();
 		
-		if (filterList != null) {
-			System.out.print(filterList.getCount());
+		
+		if (filterList == null) 
+			return;
+		
+		name = dlg.getFilterName();
+		linkState = dlg.getLinkState();
+		
+		userFilter = new UserFilterObject(filterList,name,linkState);
+		userFilters.add(userFilter);
+		
+		filterLoggerUi = new TabContent(tbTabContainer, name, true);
+		
+		try {
+			logcat.addSlot(name, filterList).linkUi(filterLoggerUi);
+		} catch (Exception e) {
+			Log.write(e.getMessage());
+			e.printStackTrace(Log.getPrintStreamInstance());
 		}
 		
 	}
@@ -152,6 +174,7 @@ public class MainWindow {
 		
 		tbTabContainer.setBounds(10, 10, 403, 222);
 		
+		userFilters = new IterableArrayList<UserFilterObject>();
 		logcat = new LogcatManager();
 		
 		TabContent allLog = new TabContent(tbTabContainer,"All Logs");
@@ -159,11 +182,9 @@ public class MainWindow {
 		try {
 			logcat.addSlot("All Logs", null).linkUi(allLog);
 			
-		} catch (Exception e1) {
+		} catch (Exception e) {
+			Log.write(e.getMessage());
 		}
-		
-		LogFilter.getFilterOperatorFromInt(2);
-		
 		
 	}
 }

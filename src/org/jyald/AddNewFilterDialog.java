@@ -51,7 +51,7 @@ public class AddNewFilterDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return filters;
+		return filters.getCount() == 0 ? null : filters;
 	}
 	
 	private LogFilter getFilterObjectFromUI() {
@@ -160,6 +160,7 @@ public class AddNewFilterDialog extends Dialog {
 				onBtnAddToFilterClick();
 			}
 		});
+		
 		btnAddToFilter.setBounds(144, 168, 130, 31);
 		btnAddToFilter.setText("Add to Filter List");
 		

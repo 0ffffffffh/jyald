@@ -3,6 +3,7 @@ package org.jyald.core;
 import org.jyald.loggingmodel.*;
 import org.jyald.uicomponents.TabContent;
 import org.jyald.util.*;
+import org.yald.debuglog.Log;
 
 
 public class LogcatManager {
@@ -32,6 +33,7 @@ public class LogcatManager {
 		final BoolContainer isGeneralEntry = new BoolContainer(true);
 		
 		if (line.compareTo("DEVCON") == 0) {
+			Log.write("Device online!");
 			//TODO: Notifity user
 			return;
 		}
@@ -69,12 +71,16 @@ public class LogcatManager {
 		if (StringHelper.isNullOrEmpty(logcatProcess.getExecutableFile()))
 			throw new Exception("adb is not set!");
 		
+		Log.write("LogcatManager now starting...");
+		
 		logcatProcess.start();
 		
 		return logcatProcess.isRunning();
 	}
 	
 	public void stop() {
+		Log.write("LogcatManager stopping...");
+		
 		logcatProcess.kill();
 	}
 	

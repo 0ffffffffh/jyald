@@ -34,8 +34,13 @@ public class FilterList implements Serializable, IFilterMatchable {
 		return -1;
 	}
 	
+	
 	public final boolean getLinkAndState() {
 		return linkAnd;
+	}
+	
+	public void setLinkAndState(boolean state) {
+		linkAnd = state;
 	}
 	
 	@Override
