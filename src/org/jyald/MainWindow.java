@@ -11,11 +11,11 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.jyald.core.LogcatManager;
+import org.jyald.debuglog.Log;
 import org.jyald.loggingmodel.FilterList;
 import org.jyald.loggingmodel.UserFilterObject;
 import org.jyald.uicomponents.TabContent;
 import org.jyald.util.IterableArrayList;
-import org.yald.debuglog.Log;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 

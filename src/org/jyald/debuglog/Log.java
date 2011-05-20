@@ -1,4 +1,4 @@
-package org.yald.debuglog;
+package org.jyald.debuglog;
 
 import java.io.FileWriter;
 import java.io.IOException;
