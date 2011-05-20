@@ -3,6 +3,7 @@ package org.jyald.uicomponents;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.jyald.loggingmodel.LogEntry;
+import org.jyald.util.LogTimeCalculator;
 
 public class TabContent {
 	private TabFolder container;
@@ -10,6 +11,7 @@ public class TabContent {
 	private String tabText;
 	private ListView logList;
 	private Thread ownerThread;
+	private static LogTimeCalculator logTime = new LogTimeCalculator();
 	
 	public TabContent(TabFolder containerObj, String text, boolean selected) {
 		ownerThread = Thread.currentThread();
@@ -50,7 +52,7 @@ public class TabContent {
 	
 	private String[] getLogItemsForLogObject(LogEntry log) {
 		String[] itemText = new String[5];
-		itemText[0] = "JUST NOW! YA NE OLACAGIDI?"; //TODO: heey
+		itemText[0] = logTime.getCurrentTimes();
 		itemText[1] = log.getDebugTypeString();
 		itemText[2] = String.valueOf(log.getPid());
 		itemText[3] = log.getTag();

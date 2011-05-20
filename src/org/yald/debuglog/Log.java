@@ -17,8 +17,8 @@ public class Log {
 		String currTime;
 		
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        Date date = new Date();
-        currTime = dateFormat.format(date);
+		Date date = new Date();
+		currTime = dateFormat.format(date);
         
 		
 		if (objects != null) 
