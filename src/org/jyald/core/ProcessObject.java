@@ -25,8 +25,9 @@ public class ProcessObject implements Runnable {
 	}
 	
 	private boolean internalStart() {
+		
 		try {
-			workingProcess = Runtime.getRuntime().exec("adb logcat");
+			workingProcess = Runtime.getRuntime().exec(String.format("\"%s\" logcat", adbExecFile));
 		} catch (IOException e) {
 			return false;
 		}

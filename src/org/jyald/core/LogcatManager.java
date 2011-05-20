@@ -25,7 +25,6 @@ public class LogcatManager {
 				onLineReceived(line);
 			}
 		});
-		
 	}
 	
 	
@@ -106,6 +105,10 @@ public class LogcatManager {
 		}
 		
 		return slot;
+	}
+	
+	public void removeSlot(FilteredLogSlot slot) throws Exception {
+		throw new Exception("removeSlot(OBJECT) is not implemented yet");
 	}
 	
 	public void removeSlot(String name) {

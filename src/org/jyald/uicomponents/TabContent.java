@@ -44,10 +44,28 @@ public class TabContent {
 	
 	private void writeLogToList(LogEntry entry) {
 		try {
-			logList.addItem(getLogItemsForLogObject(entry));
+			logList.addItem(getColorForEntry(entry), getLogItemsForLogObject(entry));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private int getColorForEntry(LogEntry log) {
+		
+		switch (log.getDebugType()) {
+			case Info:
+				return ListViewItem.GREEN;
+			case Debug:
+				return ListViewItem.BLUE;
+			case Warning:
+				return ListViewItem.ORANGE;
+			case Error:
+				return ListViewItem.RED;
+			case Verbose:
+				return ListViewItem.BLACK;
+		}
+		
+		return 0;
 	}
 	
 	private String[] getLogItemsForLogObject(LogEntry log) {
@@ -60,6 +78,8 @@ public class TabContent {
 		
 		return itemText;
 	}
+	
+	
 	
 	public void dispose() {
 		logList.dispose();

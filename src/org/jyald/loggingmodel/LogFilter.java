@@ -1,6 +1,7 @@
 package org.jyald.loggingmodel;
 
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 
 
@@ -42,8 +43,7 @@ public class LogFilter implements Serializable, IFilterMatchable {
 		String sval = (String)val;
 		
 		if (useRegExp) {
-			//TODO: Implement!
-			return true;
+			return Pattern.matches(sval, str);
 		}
 		
 		switch (oper) {

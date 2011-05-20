@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+import org.jyald.debuglog.Log;
 import org.jyald.util.IterableArrayList;
 
 
@@ -23,6 +25,7 @@ public class UserFilterObject implements Serializable {
 			fso.close();
 		}
 		catch (Exception e) {
+			e.printStackTrace(Log.getPrintStreamInstance());
 			return false;
 		}
 		
@@ -41,6 +44,7 @@ public class UserFilterObject implements Serializable {
 			fsi.close();
 		}
 		catch (Exception e) {
+			e.printStackTrace(Log.getPrintStreamInstance());
 			return null;
 		}
 		

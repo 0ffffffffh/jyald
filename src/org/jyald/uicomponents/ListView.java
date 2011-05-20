@@ -33,13 +33,14 @@ public class ListView {
 		return listViewColumns.add(column);
 	}
 	
-	public void addItem(String ...items) throws Exception {
+	
+	public void addItem(int color, String ...items) throws Exception {
 		if (items.length > listViewColumns.size())
 			throw new Exception("Aww shit. ");
 		
 		
 		ListViewItem lvi = new ListViewItem(lvListView);
-		lvi.setItemTextColor(ListViewItem.GREEN);
+		lvi.setItemTextColor(color);
 		lvi.setItemText(items);
 		
 		lvListView.setRedraw(false);

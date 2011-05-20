@@ -16,6 +16,7 @@ public class ListViewItem {
 	public static final int BLUE = 0x0000ff;
 	public static final int GREEN = 0x008000;
 	public static final int ORANGE = 0xffa500;
+	public static final int BLACK = 0x000000;
 	
 	
 	public ListViewItem(Table parent){

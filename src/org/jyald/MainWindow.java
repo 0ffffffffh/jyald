@@ -1,7 +1,7 @@
 package org.jyald;
 
-
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
@@ -14,18 +14,20 @@ import org.jyald.core.LogcatManager;
 import org.jyald.debuglog.Log;
 import org.jyald.loggingmodel.FilterList;
 import org.jyald.loggingmodel.UserFilterObject;
+import org.jyald.uicomponents.MsgBox;
 import org.jyald.uicomponents.TabContent;
 import org.jyald.util.IterableArrayList;
+import org.jyald.util.StringHelper;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 
 public class MainWindow {
-
 	protected Shell shlYetAnotherLogcat;
 	protected TabFolder tbTabContainer;
 	private LogcatManager logcat;
 	private IterableArrayList<UserFilterObject> userFilters;
+	private Setting setting;
 	
 	public static void main(String[] args) {
 		try {
@@ -51,8 +53,18 @@ public class MainWindow {
 	}
 
 	protected void onmnFilterManagerClick() {
+		IterableArrayList<UserFilterObject> removedFilters;
 		FilterManagerDialog dlg = new FilterManagerDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		dlg.setUserFilterList(userFilters);
 		dlg.open();
+		
+		removedFilters = dlg.getRemovedFilters();
+		
+		if (removedFilters.getCount() > 0) {
+			for (UserFilterObject currFilter : removedFilters) {
+				logcat.removeSlot(currFilter.getFilterName());
+			}
+		}
 	}
 	
 	protected void onmnNewFilterClick() {
@@ -77,17 +89,39 @@ public class MainWindow {
 		
 		filterLoggerUi = new TabContent(tbTabContainer, name, true);
 		
+		UserFilterObject.saveFilters(userFilters, "filters.flt");
+		
 		try {
 			logcat.addSlot(name, filterList).linkUi(filterLoggerUi);
 		} catch (Exception e) {
 			Log.write(e.getMessage());
 			e.printStackTrace(Log.getPrintStreamInstance());
 		}
+	}
+	
+	protected void onmnSetAdbClick() {
+		FileDialog fileDlg = new FileDialog(shlYetAnotherLogcat,SWT.OPEN);
+		fileDlg.setText("Please select adb executable file");
+		String selected = fileDlg.open();
+		
+		setting.adbExecutableFile = selected;
+		
+		if (StringHelper.isNullOrEmpty(selected)) {
+			return;
+		}
+		
+		if (Setting.saveSetting(setting)) 
+			MsgBox.show(shlYetAnotherLogcat,"setting","adb location has been set", SWT.ICON_INFORMATION);
+		else
+			MsgBox.show(shlYetAnotherLogcat, "setting", "an error occurred while writing adb location", SWT.ICON_ERROR);
+		
+	}
+	
+	protected void onmnStartClick() {
 		
 	}
 	
 	protected void onTabContainerResized() {
-		
 		
 	}
 	
@@ -143,9 +177,21 @@ public class MainWindow {
 		mnSystemMenu.setMenu(menu_2);
 		
 		MenuItem mnStart = new MenuItem(menu_2, SWT.NONE);
+		mnStart.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onmnStartClick();
+			}
+		});
 		mnStart.setText("Start");
 		
 		MenuItem mnSetAdb = new MenuItem(menu_2, SWT.NONE);
+		mnSetAdb.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onmnSetAdbClick();
+			}
+		});
 		mnSetAdb.setText("Set ADB");
 		
 		MenuItem mnAboutMenu = new MenuItem(menu, SWT.NONE);
@@ -170,12 +216,15 @@ public class MainWindow {
 			}
 		});
 		
-		
-		
 		tbTabContainer.setBounds(10, 10, 403, 222);
 		
 		userFilters = new IterableArrayList<UserFilterObject>();
+		
+		setting = Setting.loadSetting();
+		
 		logcat = new LogcatManager();
+		
+		userFilters = UserFilterObject.loadFilters("filters.flt");
 		
 		TabContent allLog = new TabContent(tbTabContainer,"All Logs");
 		
@@ -184,7 +233,29 @@ public class MainWindow {
 			
 		} catch (Exception e) {
 			Log.write(e.getMessage());
+			e.printStackTrace(Log.getPrintStreamInstance());
 		}
+		
+		if (userFilters == null) {
+			userFilters = new IterableArrayList<UserFilterObject>();
+		}
+		else {
+			TabContent filterTabPage;
+			
+			for (UserFilterObject filter : userFilters) {
+				filterTabPage = new TabContent(tbTabContainer,filter.getFilterName());
+				
+				try {
+					logcat.addSlot(filter.getFilterName(), filter.getFilterList()).
+												linkUi(filterTabPage);
+				} catch (Exception e1) {
+					Log.write(e1.getMessage());
+					e1.printStackTrace(Log.getPrintStreamInstance());
+				}
+			}
+		}
+		
+
 		
 	}
 }
