@@ -20,6 +20,8 @@ import org.jyald.util.IterableArrayList;
 import org.jyald.util.StringHelper;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 
 public class MainWindow {
@@ -28,6 +30,7 @@ public class MainWindow {
 	private LogcatManager logcat;
 	private IterableArrayList<UserFilterObject> userFilters;
 	private Setting setting;
+	private MenuItem mnStart;
 	
 	public static void main(String[] args) {
 		try {
@@ -118,15 +121,49 @@ public class MainWindow {
 	}
 	
 	protected void onmnStartClick() {
+		if (!logcat.isActive()) {
+			logcat.stop();
+			mnStart.setText("Start");
+			return;
+		}
 		
+		try {
+			if (!logcat.start()) {
+				MsgBox.show(shlYetAnotherLogcat, "error", "logcat could not started", SWT.ICON_ERROR);
+				return;
+			}
+		} catch (Exception e) {
+			MsgBox.show(shlYetAnotherLogcat, "error", e.getMessage(), SWT.ICON_ERROR);
+			return;
+		}
+		
+		mnStart.setText("Stop");
 	}
 	
 	protected void onTabContainerResized() {
-		
+		for (TabContent tab : TabContent.activeTabs) {
+			tab.onResize();
+		}
 	}
 	
 	protected void createContents() {
 		shlYetAnotherLogcat = new Shell();
+		shlYetAnotherLogcat.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent e) {
+				if (logcat.isActive()) {
+					logcat.stop();
+					try {
+						logcat.dispose();
+					} catch (Exception e1) {
+						Log.write(e1.getMessage());
+					}
+				}
+				
+				Log.finish();
+			}
+		});
+		
 		shlYetAnotherLogcat.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
@@ -176,7 +213,7 @@ public class MainWindow {
 		Menu menu_2 = new Menu(mnSystemMenu);
 		mnSystemMenu.setMenu(menu_2);
 		
-		MenuItem mnStart = new MenuItem(menu_2, SWT.NONE);
+		mnStart = new MenuItem(menu_2, SWT.NONE);
 		mnStart.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

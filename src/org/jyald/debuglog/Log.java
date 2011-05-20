@@ -56,7 +56,7 @@ public class Log {
 		return _stream;
 	}
 	
-	public void finish() {
+	public static void finish() {
 		//TODO: doo
 	}
 }

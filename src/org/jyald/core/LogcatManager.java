@@ -83,6 +83,10 @@ public class LogcatManager {
 		logcatProcess.kill();
 	}
 	
+	public final boolean isActive() {
+		return logcatProcess.isRunning();
+	}
+	
 	public final String getAdb() {
 		return logcatProcess.getExecutableFile();
 	}
@@ -129,6 +133,19 @@ public class LogcatManager {
 			}
 			slots.remove(toRemove);
 		}
+	}
+	
+	public void dispose() throws Exception {
+		if (isActive()) 
+			throw new Exception("You cannot dispose at this time. Because LogcatManager still active.");
+		
+		generalEntries.clear();
+		
+		for (FilteredLogSlot slot : slots) {
+			slot.dispose();
+		}
+		
+		slots.clear();
 	}
 	
 	
