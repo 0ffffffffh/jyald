@@ -12,6 +12,7 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.jyald.core.LogcatManager;
 import org.jyald.debuglog.Log;
+import org.jyald.debuglog.LogLevel;
 import org.jyald.loggingmodel.FilterList;
 import org.jyald.loggingmodel.UserFilterObject;
 import org.jyald.uicomponents.MsgBox;
@@ -35,6 +36,7 @@ public class MainWindow {
 	public static void main(String[] args) {
 		
 		Log.printOnDefaultSysStreamLogReplica = false;
+		Log.setLogLevel(LogLevel.CORE | LogLevel.MODEL);
 		
 		try {
 			MainWindow window = new MainWindow();

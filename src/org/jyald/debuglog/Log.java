@@ -9,8 +9,10 @@ import java.util.Date;
 import org.jyald.util.StringHelper;
 
 public class Log {
+	
 	private static StringBuffer _logBuffer = new StringBuffer(6 * 1024);
 	private static PrintStream _stream;
+	private static DebugLogLevel _logLevel = new DebugLogLevel();
 	
 	public static boolean printOnDefaultSysStreamLogReplica;
 	
@@ -31,10 +33,10 @@ public class Log {
 		return finalLog;
 	}
 	
-	public synchronized static void write(String format, Object...objects) {
+	private static void internalWrite(String format, boolean forceWriteToDisk, Object...objects) {
 		String logLine;
 		
-		if (_logBuffer.length() >= 5 * 1024) {
+		if (forceWriteToDisk || (_logBuffer.length() >= 5 * 1024)) {
 			
 			try {
 				FileWriter fw = new FileWriter("jyald-deblog.txt",true);
@@ -48,6 +50,9 @@ public class Log {
 			
 		}
 		
+		if (StringHelper.isNullOrEmpty(format))
+			return;
+		
 		if (format.equals(StringHelper.NEW_LINE))
 			return;
 		
@@ -59,6 +64,20 @@ public class Log {
 			System.out.println(logLine);
 	}
 	
+	public synchronized static void write(String format, Object...objects) {
+		Log.internalWrite(format, false, objects);
+	}
+	
+	public synchronized static void writeByLevel(int level, String format, Object...objects) {
+		if (_logLevel.isLoggableLevel(level)) {
+			Log.internalWrite(format, false, objects);
+		}
+	}
+	
+	public static void setLogLevel(int level) {
+		_logLevel.setLevel(level);
+	}
+	
 	public static PrintStream getPrintStreamInstance() {
 		if (_stream == null) {
 			_stream = new PrintStream(new DebugPrintStream());
@@ -67,7 +86,11 @@ public class Log {
 		return _stream;
 	}
 	
+	
+	
 	public static void finish() {
-		//TODO: doo
+		Log.write("Logging system finishing");
+		Log.internalWrite(null, true);
+		_stream.close();
 	}
 }

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.jyald.debuglog.Log;
+import org.jyald.debuglog.LogLevel;
 import org.jyald.exceptions.TimedOutException;
 import org.jyald.util.Lock;
 import org.jyald.util.StringHelper;
@@ -28,6 +30,7 @@ public class ProcessObject implements Runnable {
 		try {
 			workingProcess = Runtime.getRuntime().exec(String.format("\"%s\" logcat", adbExecFile));
 		} catch (IOException e) {
+			Log.write(e.getMessage());
 			return false;
 		}
 		
@@ -56,13 +59,18 @@ public class ProcessObject implements Runnable {
 		workerLock.lock();
 		processStartWaitLock.lock();
 		
+		Log.writeByLevel(LogLevel.CORE, "Starting adb process worker thread");
+		
 		consumeWorker = new Thread(this);
 		consumeWorker.start();
+		
+		Log.writeByLevel(LogLevel.CORE, "Waiting process to be ready");
 		
 		try {
 			processStartWaitLock.waitForLock(10 * 1000);
 		}
 		catch (TimedOutException e) {
+			Log.writeByLevel(LogLevel.CORE,"process start wait timed out!");
 			return false;
 		}
 		

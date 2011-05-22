@@ -1,6 +1,7 @@
 package org.jyald.core;
 
 import org.jyald.debuglog.Log;
+import org.jyald.debuglog.LogLevel;
 import org.jyald.loggingmodel.*;
 import org.jyald.uicomponents.TabContent;
 import org.jyald.util.*;
@@ -72,7 +73,7 @@ public class LogcatManager {
 		if (StringHelper.isNullOrEmpty(logcatProcess.getExecutableFile()))
 			throw new Exception("adb is not set!");
 		
-		Log.write("LogcatManager now starting...");
+		Log.writeByLevel(LogLevel.CORE, "LogcatManager is now starting");
 		
 		logcatProcess.start();
 		
@@ -80,7 +81,7 @@ public class LogcatManager {
 	}
 	
 	public void stop() {
-		Log.write("LogcatManager stopping...");
+		Log.writeByLevel(LogLevel.CORE,"LogcatManager stopping");
 		
 		logcatProcess.kill();
 	}
@@ -118,8 +119,14 @@ public class LogcatManager {
 		return slot;
 	}
 	
-	public void removeSlot(FilteredLogSlot slot) throws Exception {
-		throw new Exception("removeSlot(OBJECT) is not implemented yet");
+	public void removeSlot(FilteredLogSlot slot){
+		slots.remove(slot);
+		
+		try {
+			slot.dispose();
+		} catch(Exception e) {
+			e.printStackTrace(Log.getPrintStreamInstance());
+		}
 	}
 	
 	public void removeSlot(String name) {
@@ -136,7 +143,7 @@ public class LogcatManager {
 			try {
 				toRemove.dispose();
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.printStackTrace(Log.getPrintStreamInstance());
 			}
 			slots.remove(toRemove);
 		}
