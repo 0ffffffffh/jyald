@@ -95,13 +95,18 @@ public class LogcatManager {
 		logcatProcess.setExecutableFile(adbFile);
 	}
 	
-	public FilteredLogSlot addSlot(String name, FilterList list) {
+	public FilteredLogSlot addSlot(String name, FilterList list, TabContent ui) {
 		FilteredLogSlot slot = null;
 		
 		if (StringHelper.isNullOrEmpty(name)) 
 			return null;
 		
 		slot = new FilteredLogSlot(name,list);
+		
+		try {
+			slot.linkUi(ui);
+		} catch (Exception e) {}
+		
 		slots.add(slot);
 		
 		if (slots.getCount() == 1) {

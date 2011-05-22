@@ -49,6 +49,9 @@ public class FilteredLogSlot {
 	public boolean tryAdd(LogEntry entry) throws Exception {
 		checkDisposed();
 		
+		if (filters == null) 
+			return false;
+		
 		if (filters.match(entry)) {
 			loggerUi.writeLog(entry);
 			entries.addEntry(entry);

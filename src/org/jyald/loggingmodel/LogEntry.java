@@ -3,6 +3,8 @@ package org.jyald.loggingmodel;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jyald.debuglog.Log;
+
 
 public class LogEntry {
 	
@@ -58,7 +60,10 @@ public class LogEntry {
 					pid = Integer.parseInt(match.group(3).trim());
 				}
 				catch (Exception e) 
-				{ return null; }
+				{
+					e.printStackTrace(Log.getPrintStreamInstance());
+					return null; 
+				}
 				
 				msg = match.group(4);
 				

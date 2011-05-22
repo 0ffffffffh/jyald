@@ -47,6 +47,10 @@ public class TabContent {
 	}
 	
 	private void writeLogToList(LogEntry entry) {
+		
+		if (entry == null)
+			return;
+		
 		try {
 			logList.addItem(getColorForEntry(entry), getLogItemsForLogObject(entry));
 		} catch (Exception e) {

@@ -95,7 +95,7 @@ public class MainWindow {
 		UserFilterObject.saveFilters(userFilters, "filters.flt");
 		
 		try {
-			logcat.addSlot(name, filterList).linkUi(filterLoggerUi);
+			logcat.addSlot(name, filterList, filterLoggerUi);
 		} catch (Exception e) {
 			Log.write(e.getMessage());
 			e.printStackTrace(Log.getPrintStreamInstance());
@@ -121,7 +121,7 @@ public class MainWindow {
 	}
 	
 	protected void onmnStartClick() {
-		if (!logcat.isActive()) {
+		if (logcat.isActive()) {
 			logcat.stop();
 			mnStart.setText("Start");
 			return;
@@ -267,7 +267,7 @@ public class MainWindow {
 		TabContent allLog = new TabContent(tbTabContainer,"All Logs");
 		
 		try {
-			logcat.addSlot("All Logs", null).linkUi(allLog);
+			logcat.addSlot("All Logs", null,allLog);
 			
 		} catch (Exception e) {
 			Log.write(e.getMessage());
@@ -284,8 +284,7 @@ public class MainWindow {
 				filterTabPage = new TabContent(tbTabContainer,filter.getFilterName());
 				
 				try {
-					logcat.addSlot(filter.getFilterName(), filter.getFilterList()).
-												linkUi(filterTabPage);
+					logcat.addSlot(filter.getFilterName(), filter.getFilterList(),filterTabPage);
 				} catch (Exception e1) {
 					Log.write(e1.getMessage());
 					e1.printStackTrace(Log.getPrintStreamInstance());
