@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="linuxbuild" name="build file for linux">
+    <!--ANT 1.7 is required                                        -->
+    <target name="linuxbuild">
+        <jar destfile="bin/jyald.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="org.jyald.MainWindow"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="./bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="./lib/swt-3.7M7-gtk-linux-x86.jar"/>
+        </jar>
+    </target>
+</project>

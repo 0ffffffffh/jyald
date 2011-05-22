@@ -260,6 +260,7 @@ public class MainWindow {
 		setting = Setting.loadSetting();
 		
 		logcat = new LogcatManager();
+		logcat.setAdb(setting.adbExecutableFile);
 		
 		userFilters = UserFilterObject.loadFilters("filters.flt");
 		
@@ -291,8 +292,6 @@ public class MainWindow {
 				}
 			}
 		}
-		
-
 		
 	}
 }
