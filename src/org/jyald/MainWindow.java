@@ -255,8 +255,6 @@ public class MainWindow {
 		
 		tbTabContainer.setBounds(10, 10, 403, 222);
 		
-		userFilters = new IterableArrayList<UserFilterObject>();
-		
 		setting = Setting.loadSetting();
 		
 		logcat = new LogcatManager();
