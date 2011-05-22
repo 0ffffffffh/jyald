@@ -3,6 +3,8 @@ package org.jyald.loggingmodel;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import org.jyald.debuglog.Log;
+
 
 
 public class LogFilter implements Serializable, IFilterMatchable {
@@ -48,13 +50,13 @@ public class LogFilter implements Serializable, IFilterMatchable {
 		
 		switch (oper) {
 			case Equal:
-				return sval.compareTo(str) == 0;
+				return str.compareTo(sval) == 0;
 			case NotEqual:
-				return sval.compareTo(str) != 0;
+				return str.compareTo(sval) != 0;
 			case Contains:
-				return sval.contains(str) == true;
+				return str.contains(sval) == true;
 			case NotContains:
-				return sval.contains(str) != true;
+				return str.contains(sval) != true;
 		}
 		
 		return false;
@@ -84,6 +86,8 @@ public class LogFilter implements Serializable, IFilterMatchable {
 	
 	@Override
 	public boolean match(LogEntry log) {
+		
+		Log.write("Checking entry tag %s for filter->%s",log.getTag(), toString());
 		
 		switch (sect) {
 			case LogTypeSection:
