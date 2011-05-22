@@ -33,6 +33,9 @@ public class MainWindow {
 	private MenuItem mnStart;
 	
 	public static void main(String[] args) {
+		
+		Log.printOnDefaultSysStreamLogReplica = false;
+		
 		try {
 			MainWindow window = new MainWindow();
 			window.open();

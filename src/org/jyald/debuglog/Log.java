@@ -12,6 +12,8 @@ public class Log {
 	private static StringBuffer _logBuffer = new StringBuffer(6 * 1024);
 	private static PrintStream _stream;
 	
+	public static boolean printOnDefaultSysStreamLogReplica;
+	
 	private static String initLogBuffer(String format, Object...objects) {
 		String finalLog;
 		String currTime;
@@ -30,6 +32,7 @@ public class Log {
 	}
 	
 	public synchronized static void write(String format, Object...objects) {
+		String logLine;
 		
 		if (_logBuffer.length() >= 5 * 1024) {
 			
@@ -45,7 +48,15 @@ public class Log {
 			
 		}
 		
-		_logBuffer.append(initLogBuffer(format,objects));
+		if (format.equals(StringHelper.NEW_LINE))
+			return;
+		
+		logLine = initLogBuffer(format,objects);
+		
+		_logBuffer.append(logLine);
+		
+		if (Log.printOnDefaultSysStreamLogReplica)
+			System.out.println(logLine);
 	}
 	
 	public static PrintStream getPrintStreamInstance() {

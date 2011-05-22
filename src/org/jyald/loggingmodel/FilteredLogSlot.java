@@ -1,6 +1,6 @@
 package org.jyald.loggingmodel;
 
-import org.jyald.debuglog.Log;
+
 import org.jyald.uicomponents.TabContent;
 
 public class FilteredLogSlot {
