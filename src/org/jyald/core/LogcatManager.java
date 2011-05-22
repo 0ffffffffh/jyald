@@ -39,6 +39,9 @@ public class LogcatManager {
 		
 		final LogEntry entry = LogEntry.parse(line);
 		
+		if (entry == null)
+			return;
+		
 		slots.iterate(new ArrayListIterateHandler<FilteredLogSlot>() {
 
 			@Override
@@ -55,7 +58,6 @@ public class LogcatManager {
 				isGeneralEntry.setBool(true);
 				return false;
 			}
-			
 		});
 		
 		if (isGeneralEntry.getBool()) {
