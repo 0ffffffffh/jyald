@@ -1,5 +1,6 @@
 package org.jyald.loggingmodel;
 
+import org.jyald.debuglog.Log;
 import org.jyald.uicomponents.TabContent;
 
 public class FilteredLogSlot {
@@ -55,9 +56,10 @@ public class FilteredLogSlot {
 		if (filters.match(entry)) {
 			loggerUi.writeLog(entry);
 			entries.addEntry(entry);
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	public void dispose() throws Exception {
