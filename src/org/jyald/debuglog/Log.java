@@ -91,6 +91,7 @@ public class Log {
 	public static void finish() {
 		Log.write("Logging system finishing");
 		Log.internalWrite(null, true);
-		_stream.close();
+		if (_stream != null)
+			_stream.close();
 	}
 }

@@ -33,9 +33,23 @@ public class MainWindow {
 	private Setting setting;
 	private MenuItem mnStart;
 	
+	private static void parseCommandLine(String[] args) {
+		if (args.length > 2) {
+			if (args[0].equals("-dr")) {
+				Log.printOnDefaultSysStreamLogReplica = args[1].equals("y");
+			}
+			else if (args[0].equals("-l")) {
+				Log.setLogLevel(LogLevel.getLogLevelCombination(args[1]));
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		
-		Log.printOnDefaultSysStreamLogReplica = false;
+		//TODO: We may get logging level option from command line.
+		parseCommandLine(args);
+		
+		//Log.printOnDefaultSysStreamLogReplica = true;
 		Log.setLogLevel(LogLevel.CORE | LogLevel.MODEL);
 		
 		try {

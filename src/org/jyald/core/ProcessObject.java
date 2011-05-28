@@ -39,6 +39,7 @@ public class ProcessObject implements Runnable {
 	
 	private void internalStop() {
 		if (workingProcess != null) {
+			Log.writeByLevel(LogLevel.CORE, "killing logcat process");
 			workingProcess.destroy();
 			running = false;
 			workingProcess = null;
@@ -78,18 +79,24 @@ public class ProcessObject implements Runnable {
 	}
 	
 	public void kill() {
-		int trycount=10;
+		int trycount=4;
 		
 		if (workingProcess != null && running) {
+			
+			Log.writeByLevel(LogLevel.CORE, "Trying to stop logcat process");
 			
 			consume = false;
 			
 			while (consumeWorker.getState() != Thread.State.TERMINATED) {
+				
+				Log.writeByLevel(LogLevel.CORE, "Waiting worker thread to finish #%d",trycount);
+				
 				try {
 					workerLock.waitForLock(1000);
 				}
 				catch (TimedOutException e) {
 					if (trycount <= 0) {
+						Log.writeByLevel(LogLevel.CORE, "Thread finish wait threshold limit exceeded. Forcing for finish");
 						/*
 						i think it's gonna to infinite.
 						force stop the process. 
@@ -156,6 +163,7 @@ public class ProcessObject implements Runnable {
 					raiseEvent("DEVCON");
 				}
 			} catch (IOException e) {
+				Log.writeByLevel(LogLevel.CORE, "AN IO EXCEPTION OCCURRED IN CONSUME LOOP. FORCE FINISH");
 				consume = false;
 				break;
 			}
@@ -164,6 +172,8 @@ public class ProcessObject implements Runnable {
 				raiseEvent(bufferLine);
 			}
 		}
+		
+		Log.writeByLevel(LogLevel.CORE, "Exited consume loop. Releasing workerBlock");
 		
 		try {
 			streamReader.close();
