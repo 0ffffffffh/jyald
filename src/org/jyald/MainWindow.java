@@ -214,7 +214,7 @@ public class MainWindow {
 	}
 	
 	protected void onmnCreateShellClick() {
-		AdbShellDialog shell = new AdbShellDialog(shlMain,SWT.DIALOG_TRIM,setting.adbExecutableFile);
+		AdbShellDialog shell = new AdbShellDialog(shlMain,SWT.SHELL_TRIM,setting.adbExecutableFile);
 		shell.open();
 	}
 	

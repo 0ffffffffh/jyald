@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 
 import org.jyald.debuglog.Log;
@@ -53,6 +52,10 @@ public class ProcessObject implements Runnable {
 	}
 	
 	private void raiseEvent(String line) {
+		
+		if (!consume)
+			return;
+		
 		if (stdoutRecv != null) {
 			stdoutRecv.onOutputLineReceived(line);
 		}
@@ -87,6 +90,10 @@ public class ProcessObject implements Runnable {
 	}
 	
 	public void kill() {
+		kill(false);
+	}
+	
+	public void kill(boolean force) {
 		int trycount=4;
 		
 		if (workingProcess != null && running) {
@@ -96,6 +103,11 @@ public class ProcessObject implements Runnable {
 			consume = false;
 			
 			while (consumeWorker.getState() != Thread.State.TERMINATED) {
+				
+				if (force) {
+					internalStop();
+					return;
+				}
 				
 				Log.writeByLevel(LogLevel.CORE, "Waiting worker thread to finish #%d",trycount);
 				

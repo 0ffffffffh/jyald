@@ -9,6 +9,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.graphics.Rectangle;
 
 public class AdbShellDialog extends Dialog {
 
@@ -35,6 +38,9 @@ public class AdbShellDialog extends Dialog {
 				display.sleep();
 			}
 		}
+		
+		logcatShell.stopShell();
+		
 		return result;
 	}
 	
@@ -46,9 +52,25 @@ public class AdbShellDialog extends Dialog {
 		logcatShell.sendShellInput(command);
 	}
 	
+	protected void onResize() {
+		if (txtShellOutput != null) {
+			Rectangle rect = txtShellOutput.getBounds();
+			rect.width = shell.getBounds().width - 20;
+			rect.height = shell.getBounds().height - 120;
+			
+			txtShellOutput.setBounds(rect);
+		}
+	}
+	
 	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(423, 300);
+		shell = new Shell(getParent(), SWT.CLOSE | SWT.MIN | SWT.RESIZE | SWT.TITLE);
+		shell.addControlListener(new ControlAdapter() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				onResize();
+			}
+		});
+		shell.setSize(430, 306);
 		shell.setText(getText());
 		
 		txtShellOutput = new StyledText(shell, SWT.BORDER);
@@ -76,6 +98,7 @@ public class AdbShellDialog extends Dialog {
 			@Override
 			public void run() {
 				txtShellOutput.append(output + "\n");
+				txtShellOutput.setSelection(txtShellOutput.getText().length());
 			}
 		});
 	}

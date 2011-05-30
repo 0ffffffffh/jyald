@@ -2,6 +2,13 @@
 <project default="macosxbuild" name="build file for macosx cocoa">
     <!--ANT 1.7 is required                                        -->
     <target name="macosxbuild">
+    	<mkdir dir="./bin"/>
+    	<delete>
+			<fileset dir="./bin">
+	    		<include name="**/*.jar"/>
+			</fileset>
+		</delete>
+	
         <jar destfile="bin/jyald.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.jyald.MainWindow"/>

@@ -12,6 +12,9 @@ public class LogcatShell {
 
 			@Override
 			public void onOutputLineReceived(String line) {
+				if (line.equals("DEVCON"))
+					return;
+				
 				shellDlgUi.writeOutput(line);
 			}
 			
@@ -27,7 +30,7 @@ public class LogcatShell {
 	}
 	
 	public void stopShell() {
-		
+		adbShellProcess.kill(true);
 	}
 	
 	public boolean sendShellInput(String shellInput) {
