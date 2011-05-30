@@ -12,13 +12,14 @@ public class LogcatManager {
 	private EntryList generalEntries;
 	private TabContent generalLoggerUi;
 	private ProcessObject logcatProcess;
+	private DeviceActiveHandler deviceActivationHandler;
 	
 	public LogcatManager() {
 		
 		slots = new IterableArrayList<FilteredLogSlot>();
 		generalEntries = new EntryList();
 		
-		logcatProcess = new ProcessObject();
+		logcatProcess = new ProcessObject("logcat");
 		logcatProcess.setOutputLineReceiver(new ProcessStdoutHandler() {
 
 			@Override
@@ -34,7 +35,8 @@ public class LogcatManager {
 		
 		if (line.compareTo("DEVCON") == 0) {
 			Log.write("Device online!");
-			//TODO: Notifity user
+			if (deviceActivationHandler != null)
+				deviceActivationHandler.onDeviceActivated();
 			return;
 		}
 		
@@ -96,6 +98,10 @@ public class LogcatManager {
 	
 	public void setAdb(String adbFile) {
 		logcatProcess.setExecutableFile(adbFile);
+	}
+	
+	public void registerActivationHandler(DeviceActiveHandler handler) {
+		deviceActivationHandler = handler;
 	}
 	
 	public FilteredLogSlot addSlot(String name, FilterList list, TabContent ui) {

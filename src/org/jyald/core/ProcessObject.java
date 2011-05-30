@@ -18,17 +18,19 @@ public class ProcessObject implements Runnable {
 	private boolean consume,running;
 	private Process workingProcess;
 	private String adbExecFile;
+	private String unit;
 	
-	public ProcessObject() {
+	public ProcessObject(String adbUnit) {
 		workerLock = new Lock();
 		processStartWaitLock = new Lock();
 		running = false;
 		consume = true;
+		unit = adbUnit;
 	}
 	
 	private boolean internalStart() {
 		try {
-			workingProcess = Runtime.getRuntime().exec(String.format("\"%s\" logcat", adbExecFile));
+			workingProcess = Runtime.getRuntime().exec(String.format("\"%s\" %s", adbExecFile,unit));
 		} catch (IOException e) {
 			Log.write(e.getMessage());
 			return false;
@@ -92,11 +94,11 @@ public class ProcessObject implements Runnable {
 				Log.writeByLevel(LogLevel.CORE, "Waiting worker thread to finish #%d",trycount);
 				
 				try {
-					workerLock.waitForLock(1000);
+					workerLock.waitForLock(500);
 				}
 				catch (TimedOutException e) {
 					if (trycount <= 0) {
-						Log.writeByLevel(LogLevel.CORE, "Thread finish wait threshold limit exceeded. Forcing for finish");
+						Log.writeByLevel(LogLevel.CORE, "Thread finish wait threshold limit exceeded.");
 						/*
 						i think it's gonna to infinite.
 						force stop the process. 
@@ -163,7 +165,7 @@ public class ProcessObject implements Runnable {
 					raiseEvent("DEVCON");
 				}
 			} catch (IOException e) {
-				Log.writeByLevel(LogLevel.CORE, "AN IO EXCEPTION OCCURRED IN CONSUME LOOP. FORCE FINISH");
+				Log.writeByLevel(LogLevel.CORE, "AN IO EXCEPTION OCCURRED IN CONSUME LOOP.");
 				consume = false;
 				break;
 			}

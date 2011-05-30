@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.jyald.core.DeviceActiveHandler;
 import org.jyald.core.LogcatManager;
 import org.jyald.debuglog.Log;
 import org.jyald.debuglog.LogLevel;
@@ -209,8 +210,6 @@ public class MainWindow {
 			return;
 		}
 		
-		setWindowTitle("Logcat Working");
-		
 		mnStart.setText("Stop");
 	}
 	
@@ -229,6 +228,8 @@ public class MainWindow {
 		shlMain.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
+				Log.writeByLevel(LogLevel.UI, "Exiting jyald. Stopping components");
+				
 				if (logcat.isActive()) {
 					logcat.stop();
 					try {
@@ -339,6 +340,22 @@ public class MainWindow {
 		setting = Setting.loadSetting();
 		
 		logcat = new LogcatManager();
+		logcat.registerActivationHandler(new DeviceActiveHandler() {
+
+			@Override
+			public void onDeviceActivated() {
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						setWindowTitle("Device activated");
+					}
+					
+				});
+				
+			}
+			
+		});
 		logcat.setAdb(setting.adbExecutableFile);
 		
 		userFilters = UserFilterObject.loadFilters("filters.flt");
