@@ -3,10 +3,6 @@ package org.jyald.loggingmodel;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-import org.jyald.debuglog.Log;
-
-
-
 public class LogFilter implements Serializable, IFilterMatchable {
 	
 	private FilterOperator oper;
@@ -86,9 +82,7 @@ public class LogFilter implements Serializable, IFilterMatchable {
 	
 	@Override
 	public boolean match(LogEntry log) {
-		
-		Log.write("Checking entry tag %s for filter->%s",log.getTag(), toString());
-		
+				
 		switch (sect) {
 			case LogTypeSection:
 				return doMatchForDebugType(log.getDebugType());

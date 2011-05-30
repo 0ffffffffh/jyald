@@ -1,8 +1,10 @@
 package org.jyald;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.SWT;
@@ -26,31 +28,68 @@ import org.eclipse.swt.events.ShellEvent;
 
 
 public class MainWindow {
-	protected Shell shlYetAnotherLogcat;
+	protected Shell shlMain;
 	protected TabFolder tbTabContainer;
 	private LogcatManager logcat;
 	private IterableArrayList<UserFilterObject> userFilters;
 	private Setting setting;
 	private MenuItem mnStart;
+	private final String jyaldTitle = "Yet Another Logcat Dumper";
 	
 	private static void parseCommandLine(String[] args) {
-		if (args.length > 2) {
-			if (args[0].equals("-dr")) {
-				Log.printOnDefaultSysStreamLogReplica = args[1].equals("y");
+		int level = 0,levelComb=LogLevel.ALL;
+		boolean pushToLevel=false;
+		boolean done=false;
+		
+		List<String> levelOptions = new ArrayList<String>();
+		
+		
+		for (int i=0;!done && i<args.length;i++) {
+			
+			if (args[i].equals("level")) {
+				if (!pushToLevel) {
+					pushToLevel=true;
+					continue;
+				}
 			}
-			else if (args[0].equals("-l")) {
-				Log.setLogLevel(LogLevel.getLogLevelCombination(args[1]));
+			else if (args[i].equals("replica")) {
+				if (pushToLevel)
+					done=true;
+				
+				if (i != args.length-1) {
+					Log.printOnDefaultSysStreamLogReplica = args[i+1].equals("yes");
+					i++;
+				}
+				
+			}
+			else if (pushToLevel) {
+				levelOptions.add(args[i]);
 			}
 		}
+		
+		for (String levelStr : levelOptions) {
+			level = LogLevel.getLogLevelCombination(levelStr);
+			
+			if (level == -1)
+				continue;
+			
+			if (level == LogLevel.ALL) {
+				levelComb = LogLevel.ALL;
+				break;
+			}
+			
+			levelComb |= level;
+		}
+		
+		Log.setLogLevel(levelComb);
 	}
 	
 	public static void main(String[] args) {
 		
-		//TODO: We may get logging level option from command line.
+		Log.printOnDefaultSysStreamLogReplica = true;
+		
 		parseCommandLine(args);
 		
-		//Log.printOnDefaultSysStreamLogReplica = true;
-		Log.setLogLevel(LogLevel.CORE | LogLevel.MODEL);
 		
 		try {
 			MainWindow window = new MainWindow();
@@ -64,19 +103,28 @@ public class MainWindow {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shlYetAnotherLogcat.open();
-		shlYetAnotherLogcat.layout();
+		shlMain.open();
+		shlMain.layout();
 		
-		while (!shlYetAnotherLogcat.isDisposed()) {
+		while (!shlMain.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
 		}
 	}
 
+	private void setWindowTitle(String s) {
+		if (StringHelper.isNullOrEmpty(s)) {
+			shlMain.setText(jyaldTitle);
+			return;
+		}
+		
+		shlMain.setText(String.format("%s - (%s)",jyaldTitle,s));
+	}
+	
 	protected void onmnFilterManagerClick() {
 		IterableArrayList<UserFilterObject> removedFilters;
-		FilterManagerDialog dlg = new FilterManagerDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		FilterManagerDialog dlg = new FilterManagerDialog(shlMain,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		dlg.setUserFilterList(userFilters);
 		dlg.open();
 		
@@ -96,7 +144,7 @@ public class MainWindow {
 		UserFilterObject userFilter;
 		TabContent filterLoggerUi;
 		
-		AddNewFilterDialog dlg = new AddNewFilterDialog(shlYetAnotherLogcat,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		AddNewFilterDialog dlg = new AddNewFilterDialog(shlMain,SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		filterList = (FilterList)dlg.open();
 		
 		
@@ -122,7 +170,7 @@ public class MainWindow {
 	}
 	
 	protected void onmnSetAdbClick() {
-		FileDialog fileDlg = new FileDialog(shlYetAnotherLogcat,SWT.OPEN);
+		FileDialog fileDlg = new FileDialog(shlMain,SWT.OPEN);
 		fileDlg.setText("Please select adb executable file");
 		String selected = fileDlg.open();
 		
@@ -133,9 +181,9 @@ public class MainWindow {
 		}
 		
 		if (Setting.saveSetting(setting)) 
-			MsgBox.show(shlYetAnotherLogcat,"setting","adb location has been set", SWT.ICON_INFORMATION);
+			MsgBox.show(shlMain,"setting","adb location has been set", SWT.ICON_INFORMATION);
 		else
-			MsgBox.show(shlYetAnotherLogcat, "setting", "an error occurred while writing adb location", SWT.ICON_ERROR);
+			MsgBox.show(shlMain, "setting", "an error occurred while writing adb location", SWT.ICON_ERROR);
 		
 	}
 	
@@ -146,15 +194,22 @@ public class MainWindow {
 			return;
 		}
 		
+		setWindowTitle("Waiting for device...");
+		
+		
 		try {
 			if (!logcat.start()) {
-				MsgBox.show(shlYetAnotherLogcat, "error", "logcat could not started", SWT.ICON_ERROR);
+				setWindowTitle(null);
+				MsgBox.show(shlMain, "error", "logcat could not started", SWT.ICON_ERROR);
 				return;
 			}
 		} catch (Exception e) {
-			MsgBox.show(shlYetAnotherLogcat, "error", e.getMessage(), SWT.ICON_ERROR);
+			setWindowTitle("Connection error");
+			MsgBox.show(shlMain, "error", e.getMessage(), SWT.ICON_ERROR);
 			return;
 		}
+		
+		setWindowTitle("Logcat Working");
 		
 		mnStart.setText("Stop");
 	}
@@ -165,9 +220,13 @@ public class MainWindow {
 		}
 	}
 	
+	protected void onTabActivated() {
+		onTabContainerResized();
+	}
+	
 	protected void createContents() {
-		shlYetAnotherLogcat = new Shell();
-		shlYetAnotherLogcat.addShellListener(new ShellAdapter() {
+		shlMain = new Shell();
+		shlMain.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
 				if (logcat.isActive()) {
@@ -183,22 +242,22 @@ public class MainWindow {
 			}
 		});
 		
-		shlYetAnotherLogcat.addControlListener(new ControlAdapter() {
+		shlMain.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				if (tbTabContainer != null) {
 					
-					tbTabContainer.setSize(shlYetAnotherLogcat.getSize().x-40, 
-							shlYetAnotherLogcat.getSize().y-80);
+					tbTabContainer.setSize(shlMain.getSize().x-40, 
+							shlMain.getSize().y-80);
 				}
 			}
 		});
 		
-		shlYetAnotherLogcat.setSize(450, 300);
-		shlYetAnotherLogcat.setText("Yet Another Logcat Dumper");
+		shlMain.setSize(464, 339);
+		shlMain.setText(jyaldTitle);
 		
-		Menu menu = new Menu(shlYetAnotherLogcat, SWT.BAR);
-		shlYetAnotherLogcat.setMenuBar(menu);
+		Menu menu = new Menu(shlMain, SWT.BAR);
+		shlMain.setMenuBar(menu);
 		
 		MenuItem mnMainMenu = new MenuItem(menu, SWT.CASCADE);
 		mnMainMenu.setText("Menu");
@@ -254,16 +313,19 @@ public class MainWindow {
 		mnAboutMenu.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				MessageBox msg = new MessageBox(shlYetAnotherLogcat);
-				msg.setText("About");
-				msg.setMessage("jyald\nauthor: oguz kartal \'11");
-				msg.open();
+				MsgBox.show(shlMain, "About", "jyald\nauther: Oguz Kartal \'11", SWT.ICON_INFORMATION);
 			}
 		});
 		
 		mnAboutMenu.setText("About");
 		
-		tbTabContainer = new TabFolder(shlYetAnotherLogcat, SWT.NONE);
+		tbTabContainer = new TabFolder(shlMain, SWT.NONE);
+		tbTabContainer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onTabActivated();
+			}
+		});
 		
 		tbTabContainer.addControlListener(new ControlAdapter() {
 			@Override

@@ -36,6 +36,8 @@ public class TabContent {
 		}
 		
 		activeTabs.add(this);
+		
+		onResize();
 	}
 	
 	public TabContent(TabFolder containerObj, String text) {

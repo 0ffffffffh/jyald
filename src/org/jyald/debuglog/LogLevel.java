@@ -1,5 +1,6 @@
 package org.jyald.debuglog;
 
+
 public class LogLevel {
 	public static final int ALL = 0x0;
 	public static final int CORE = 0x2;
@@ -8,26 +9,21 @@ public class LogLevel {
 	public static final int EXCEPTION = 0x10;
 	public static final int UI = 0x20;
 	
-	public static int getLogLevelCombination(String logCmdStr) {
-		int level=ALL;
-		String []levels = logCmdStr.split(",");
+	public static int getLogLevelCombination(String levelStr) {
 		
-		for (int i=0;i<levels.length;i++) {
-			
-			if (levels[i].equals("all"))
-				return level;
-			else if (levels[i].equals("cor"))
-				level |= CORE;
-			else if (levels[i].equals("mod"))
-				level |= MODEL;
-			else if (levels[i].equals("com"))
-				level |= COMPONENT;
-			else if (levels[i].equals("exc"))
-				level |= EXCEPTION;
-			else if (levels[i].equals("ui"))
-				level |= UI;
-		}
+		if (levelStr.equals("all"))
+			return ALL;
+		else if (levelStr.equals("cor"))
+			return CORE;
+		else if (levelStr.equals("mod"))
+			return MODEL;
+		else if (levelStr.equals("com"))
+			return COMPONENT;
+		else if (levelStr.equals("exc"))
+			return EXCEPTION;
+		else if (levelStr.equals("ui"))
+			return UI;
 		
-		return level;
+		return -1;
 	}
 }

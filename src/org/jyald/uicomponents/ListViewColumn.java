@@ -16,7 +16,7 @@ public class ListViewColumn {
 		
 		column = new TableColumn(container,SWT.NONE);
 		column.setText(text);
-		column.setWidth(100);
+		column.setWidth(15);
 	}
 	
 	public ListViewColumn(Table containerObj, String colText) {
