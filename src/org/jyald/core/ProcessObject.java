@@ -1,8 +1,12 @@
 package org.jyald.core;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 
 import org.jyald.debuglog.Log;
 import org.jyald.debuglog.LogLevel;
@@ -77,6 +81,8 @@ public class ProcessObject implements Runnable {
 			return false;
 		}
 		
+		Log.writeByLevel(LogLevel.CORE, "It seems ok");
+		
 		return isRunning();
 	}
 	
@@ -128,6 +134,19 @@ public class ProcessObject implements Runnable {
 	
 	public void setExecutableFile(String file) {
 		adbExecFile = file;
+	}
+	
+	public void sendToOutputStream(String s) {
+		if (!isRunning())
+			return;
+		
+		
+		OutputStream os = workingProcess.getOutputStream();  
+		PrintStream bw= new PrintStream(new BufferedOutputStream(os), true);  
+		
+		
+		bw.println(s);
+		
 	}
 
 	@Override

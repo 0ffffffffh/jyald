@@ -213,6 +213,11 @@ public class MainWindow {
 		mnStart.setText("Stop");
 	}
 	
+	protected void onmnCreateShellClick() {
+		AdbShellDialog shell = new AdbShellDialog(shlMain,SWT.DIALOG_TRIM,setting.adbExecutableFile);
+		shell.open();
+	}
+	
 	protected void onTabContainerResized() {
 		for (TabContent tab : TabContent.activeTabs) {
 			tab.onResize();
@@ -286,6 +291,17 @@ public class MainWindow {
 		
 		mnFilters.setText("Filters");
 		
+		new MenuItem(menu_1, SWT.SEPARATOR);
+		
+		MenuItem mnCreateShell = new MenuItem(menu_1, SWT.NONE);
+		mnCreateShell.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				onmnCreateShellClick();
+			}
+		});
+		mnCreateShell.setText("Create shell");
+		
 		MenuItem mnSystemMenu = new MenuItem(menu, SWT.CASCADE);
 		mnSystemMenu.setText("System");
 		
@@ -314,7 +330,7 @@ public class MainWindow {
 		mnAboutMenu.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				MsgBox.show(shlMain, "About", "jyald\nauther: Oguz Kartal \'11", SWT.ICON_INFORMATION);
+				MsgBox.show(shlMain, "About", "jyald\nauthor: Oguz Kartal \'11", SWT.ICON_INFORMATION);
 			}
 		});
 		
