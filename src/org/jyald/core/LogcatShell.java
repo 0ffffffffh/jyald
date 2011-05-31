@@ -12,8 +12,11 @@ public class LogcatShell {
 
 			@Override
 			public void onOutputLineReceived(String line) {
-				if (line.equals("DEVCON"))
+				if (line.equals("DEVCON")) {
+					shellDlgUi.writeOutput("Connected");
+					shellDlgUi.writeOutput("Welcome to JYALD Shell Interface.");
 					return;
+				}
 				
 				shellDlgUi.writeOutput(line);
 			}

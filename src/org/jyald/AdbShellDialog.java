@@ -55,10 +55,14 @@ public class AdbShellDialog extends Dialog {
 	protected void onResize() {
 		if (txtShellOutput != null) {
 			Rectangle rect = txtShellOutput.getBounds();
-			rect.width = shell.getBounds().width - 20;
-			rect.height = shell.getBounds().height - 120;
+			rect.width = shell.getClientArea().width - 20;
+			rect.height = shell.getClientArea().height - 80;
 			
 			txtShellOutput.setBounds(rect);
+			
+			rect.y = rect.height + 20;
+			rect.height = (shell.getClientArea().height - rect.height) - 30;
+			txtCommandInput.setBounds(rect);
 		}
 	}
 	
@@ -88,6 +92,9 @@ public class AdbShellDialog extends Dialog {
 		
 		txtCommandInput.setBounds(10, 226, 397, 36);
 		txtCommandInput.setFocus();
+		
+		txtShellOutput.append("Please wait. Trying connect to Adb Shell\n");
+		
 		logcatShell.startShell();
 		
 	}
@@ -96,7 +103,7 @@ public class AdbShellDialog extends Dialog {
 		Display.getDefault().asyncExec(new Runnable() {
 
 			@Override
-			public void run() {
+			public void run() { 
 				txtShellOutput.append(output + "\n");
 				txtShellOutput.setSelection(txtShellOutput.getText().length());
 			}

@@ -14,7 +14,6 @@ import org.jyald.util.Lock;
 import org.jyald.util.StringHelper;
 
 public class ProcessObject implements Runnable {
-	
 	private ProcessStdoutHandler stdoutRecv;
 	private Lock workerLock,processStartWaitLock;
 	private Thread consumeWorker;
@@ -152,13 +151,10 @@ public class ProcessObject implements Runnable {
 		if (!isRunning())
 			return;
 		
-		
 		OutputStream os = workingProcess.getOutputStream();  
 		PrintStream bw= new PrintStream(new BufferedOutputStream(os), true);  
 		
-		
 		bw.println(s);
-		
 	}
 
 	@Override
@@ -178,13 +174,26 @@ public class ProcessObject implements Runnable {
 		streamReader = new BufferedReader(new InputStreamReader(workingProcess.getInputStream()));
 		
 		while (consume) {
-			
 			try {
 				bufferLine = streamReader.readLine();
 				
-				if (StringHelper.isNullOrEmpty(bufferLine)) {
+				if (bufferLine == null) {
+					try {
+						if (workingProcess != null) {
+							workingProcess.exitValue();
+							Log.writeByLevel(LogLevel.CORE, "Process terminated");
+							consume = false;
+							raiseEvent("ADBTERM");
+						}
+					}
+					catch (IllegalThreadStateException e) {
+					}
+					
 					continue;
 				}
+				
+				if (StringHelper.isEmpty(bufferLine))
+					continue;
 				
 				if (bufferLine.startsWith("-") || bufferLine.startsWith("*")) {
 					continue;
@@ -215,6 +224,4 @@ public class ProcessObject implements Runnable {
 		
 		workerLock.release();
 	}
-	
-	
 }

@@ -4,12 +4,11 @@
     <target name="macosxbuild">
     	<mkdir dir="./bin"/>
     	<delete>
-			<fileset dir="./bin">
+		<fileset dir="./bin">
 	    		<include name="**/*.jar"/>
 			</fileset>
-		</delete>
-	
-        <jar destfile="bin/jyald.jar" filesetmanifest="mergewithoutmain">
+	</delete>
+        <jar destfile="bin/jyald_macosx.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="org.jyald.MainWindow"/>
                 <attribute name="Class-Path" value="."/>

@@ -151,7 +151,7 @@ public class AddNewFilterDialog extends Dialog {
 		lblValue.setText("Value:");
 		
 		chkUseRegularExpression = new Button(grpG, SWT.CHECK);
-		chkUseRegularExpression.setBounds(166, 122, 141, 16);
+		chkUseRegularExpression.setBounds(117, 122, 190, 16);
 		chkUseRegularExpression.setText("Use Regular Expression");
 		
 		Button btnAddToFilter = new Button(grpG, SWT.NONE);

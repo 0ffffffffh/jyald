@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class StringHelper {
 	public static final String NEW_LINE = System.getProperty("line.separator");
 	
+	public static boolean isEmpty(String s) {
+		return s.equals("");
+	}
+	
 	public static boolean isNullOrEmpty(String s) {
 		return (s == null || s.equals(""));
 	}
