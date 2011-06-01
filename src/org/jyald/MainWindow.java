@@ -136,6 +136,8 @@ public class MainWindow {
 				logcat.removeSlot(currFilter.getFilterName());
 			}
 		}
+		
+		UserFilterObject.saveFilters(userFilters, "filters.flt");
 	}
 	
 	protected void onmnNewFilterClick() {
