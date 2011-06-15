@@ -47,13 +47,13 @@ public class MainWindow {
 		
 		for (int i=0;!done && i<args.length;i++) {
 			
-			if (args[i].equals("level")) {
+			if (args[i].equals("--level") || args[i].equals("-l")) {
 				if (!pushToLevel) {
 					pushToLevel=true;
 					continue;
 				}
 			}
-			else if (args[i].equals("replica")) {
+			else if (args[i].equals("--replica") || args[i].equals("-r")) {
 				if (pushToLevel)
 					done=true;
 				
@@ -61,7 +61,6 @@ public class MainWindow {
 					Log.printOnDefaultSysStreamLogReplica = args[i+1].equals("yes");
 					i++;
 				}
-				
 			}
 			else if (pushToLevel) {
 				levelOptions.add(args[i]);
@@ -87,7 +86,7 @@ public class MainWindow {
 	
 	public static void main(String[] args) {
 		
-		Log.printOnDefaultSysStreamLogReplica = true;
+		Log.printOnDefaultSysStreamLogReplica = false;
 		
 		parseCommandLine(args);
 		

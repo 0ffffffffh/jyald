@@ -94,6 +94,7 @@ public class TabContent {
 	public void dispose() {
 		logList.dispose();
 		tabPage.dispose();
+		activeTabs.remove(this);
 	}
 	
 	public void onResize() {
