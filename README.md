@@ -4,7 +4,7 @@ Yet Another Logcat Dumper
 That's a cross platform GUI based android logcat filter system. You can define more than one rule per filter. 
 
 - Usage -
-You can find usage instructions on the project wiki page. 
+You can find usage instructions on the project **[wiki page](https://github.com/0ffffffffh/jyald/wiki)** 
 
 - Development IDE -
 Eclipse Helios, Indigo
