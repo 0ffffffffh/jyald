@@ -29,4 +29,17 @@ Installing Apache Ant.
 
 
 When you are ready, open terminal/console and locate current path to jyald project root.
-Just type "ant" and press enter. The ant builder automatically detect the build.xml and starts the build progress.
+
+Just type "ant" and press enter. The ant builder automatically detects the build.xml and starts the build progress. This usage detects automatically your running platform information. If you want to platform specific build, you should use like following command.
+
+ant [PLATFORM_IDENTIFIER] 
+
+PLATFORM_IDENTIFIER can be following values:
+
+* windows_x86 - for 32 Bit Windows
+* windows_x64 - for 64 Bit Windows
+* linux_x86 - for 32 Bit Linux
+* linux_x64 - for 64 Bit Linux
+* macosx_x86 - for 32 Bit Mac OSX
+* macosx_x64 - for 64 Bit Mac OSX
+

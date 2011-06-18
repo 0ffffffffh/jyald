@@ -8,43 +8,44 @@
     
     <property name="lib_base_name" value="swt-${swt_version}" />
     
-    <echo message="Detecting your os and cpu architecture..." />
+	<target name="auto_detect">
+    	<echo message="Detecting your os and cpu architecture..." />
    
-    <!-- Define os_name -->
-    <condition property="uisys_os" value="win32-win32">
-        <os family="windows"/>
-    </condition>
+    	<condition property="uisys_os" value="win32-win32">
+        	<os family="windows"/>
+    	</condition>
     
-    <condition property="uisys_os" value="gtk-linux">
-        <os name="linux"/>
-    </condition>
+    	<condition property="uisys_os" value="gtk-linux">
+        	<os name="linux"/>
+    	</condition>
     
-    <condition property="uisys_os" value="cocoa-macosx">
-        <and>
-            <os family="mac"/>
-            <os family="unix"/>
-        </and>
-    </condition>
-    
-    
-    <!-- Define arch --> 
-    <condition property="arch" value="x86">
-        <or>
-            <os arch="x86"/>
-            <os arch="i586"/>
-            <os arch="i386"/>
-        </or>
-    </condition>
+   		<condition property="uisys_os" value="cocoa-macosx">
+        	<and>
+            	<os family="mac"/>
+            	<os family="unix"/>
+        	</and>
+    	</condition>
     
     
-    <condition property="arch" value="x86_64">
-        <or>
-            <os arch="amd64"/>
-            <os arch="x86_64"/>
-            <os arch="x64"/>
-            <os arch="em64t"/>
-        </or>
-    </condition>
+    	<!-- Define arch --> 
+    	<condition property="arch" value="x86">
+        	<or>
+            	<os arch="x86"/>
+            	<os arch="i586"/>
+            	<os arch="i386"/>
+       		</or>
+    	</condition>
+    
+    
+    	<condition property="arch" value="x86_64">
+        	<or>
+            	<os arch="amd64"/>
+            	<os arch="x86_64"/>
+            	<os arch="x64"/>
+            	<os arch="em64t"/>
+        	</or>
+    	</condition>
+	</target>
     
     <target name="detect_library_file">
     	<echo message="Generating platform depended library filename..."/>
@@ -61,16 +62,57 @@
     	<echo message="SWT LIBRARY: ${swt_lib}" />
     </target>
     
+	<!-- MANUAL BUILD OPTIONS BEGIN -->
     
+	
+	
+	<target name="windows_x86">
+		<property name="arch" value="x86" />
+		<property name="uisys_os" value="win32-win32" />
+		<antcall target="do_build_base" />
+	</target>
     
+	<target name="windows_x64">
+		<property name="arch" value="x86_64" />
+		<property name="uisys_os" value="win32-win32" />
+		<antcall target="do_build_base" />
+	</target>
+	
+	<target name="linux_x86">
+		<echo message="start manual" />
+		<property name="arch" value="x86" />
+		<property name="uisys_os" value="gtk-linux" />
+		<antcall target="do_build_base" />
+	</target>
+		
+	<target name="linux_x64">
+		<property name="arch" value="x86_64" />
+		<property name="uisys_os" value="gtk-linux" />
+		<antcall target="do_build_base" />
+	</target>
+	
+	<target name="macosx_x86">
+		<property name="arch" value="x86" />
+		<property name="uisys_os" value="cocoa-macosx" />
+		<antcall target="do_build_base" />
+	</target>
+		
+	<target name="macosx_x64">
+		<property name="arch" value="x86_64" />
+		<property name="uisys_os" value="cocoa-macosx" />
+		<antcall target="do_build_base" />
+	</target>
+	
+	<!-- MANUAL BUILD OPTIONS END -->
+	
     <target name="compile">
     	<mkdir dir="./bin/build" />
     	<javac srcdir="./src" destdir="./bin/build" classpathref="classpath" includeantruntime="false"/>
     </target>
 	
-	
-	<target name="do_build" depends="initialize, compile">		
-		<jar destfile="./bin/jyald.jar" filesetmanifest="mergewithoutmain">
+	<target name="do_build_base" depends="initialize, compile">
+		
+		<jar destfile="./bin/jyald-${uisys_os}-${arch}.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="org.jyald.MainWindow"/>
 				<attribute name="Class-Path" value="."/>
@@ -92,5 +134,7 @@
   		-->
   		
   		<echo message="Build done." />	
-  	</target>
+	</target>
+	
+	<target name="do_build" depends="auto_detect, do_build_base"></target>
 </project>
