@@ -20,10 +20,13 @@ First, you must install apache ant build if necessary. If you already have, you 
 Installing Apache Ant.
 
 1) Go to http://ant.apache.org
+
 2) Click "Binary Distributions" from left section.
+
 3) Download ant binary package zip or tar
+
 4) Go to ant setup page for detailed installation instructions. (http://ant.apache.org/manual/index.html)
 
 
 When you are ready, open terminal/console and locate current path to jyald project root.
-Type "ant -buildfile FOR_YOUR_PLATFORM_BUILD_XML" and hit enter.
+Just type "ant" and press enter. The ant builder automatically detect the build.xml and starts the build progress.
