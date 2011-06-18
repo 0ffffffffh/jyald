@@ -76,6 +76,7 @@ public class Log {
 	
 	public static void setLogLevel(int level) {
 		_logLevel.setLevel(level);
+		
 	}
 	
 	public static PrintStream getPrintStreamInstance() {

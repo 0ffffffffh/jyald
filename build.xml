@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="do_build" name="build-os-arch" basedir=".">
+    
+    <echo message="Build started" />
+    
+    <property name="lib.dir" value="./lib"/>
+    <property name="swt_version" value="3.7M7" />
+    
+    <property name="lib_base_name" value="swt-${swt_version}" />
+    
+    <echo message="Detecting your os and cpu architecture..." />
+   
+    <!-- Define os_name -->
+    <condition property="uisys_os" value="win32-win32">
+        <os family="windows"/>
+    </condition>
+    
+    <condition property="uisys_os" value="gtk-linux">
+        <os name="linux"/>
+    </condition>
+    
+    <condition property="uisys_os" value="cocoa-macosx">
+        <and>
+            <os family="mac"/>
+            <os family="unix"/>
+        </and>
+    </condition>
+    
+    
+    <!-- Define arch --> 
+    <condition property="arch" value="x86">
+        <or>
+            <os arch="x86"/>
+            <os arch="i586"/>
+            <os arch="i386"/>
+        </or>
+    </condition>
+    
+    
+    <condition property="arch" value="x86_64">
+        <or>
+            <os arch="amd64"/>
+            <os arch="x86_64"/>
+            <os arch="x64"/>
+            <os arch="em64t"/>
+        </or>
+    </condition>
+    
+    <target name="detect_library_file">
+    	<echo message="Generating platform depended library filename..."/>
+    	<property name="swt_lib" value="${lib_base_name}-${uisys_os}-${arch}.jar" />
+    </target>
+    
+    <target name="initialize" depends="detect_library_file">
+    
+    	<path id="classpath">
+    		<fileset dir="${lib.dir}" includes="${swt_lib}"/>
+    	</path>
+    
+    	<echo message="BUILD PLATFORM: ${os.name} (${os.arch})" />
+    	<echo message="SWT LIBRARY: ${swt_lib}" />
+    </target>
+    
+    
+    
+    <target name="compile">
+    	<mkdir dir="./bin/build" />
+    	<javac srcdir="./src" destdir="./bin/build" classpathref="classpath" includeantruntime="false"/>
+    </target>
+	
+	
+	<target name="do_build" depends="initialize, compile">		
+		<jar destfile="./bin/jyald.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="org.jyald.MainWindow"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+			
+			<fileset dir="./bin/build" />
+			<zipfileset excludes="META-INF/*.SF" src="${lib.dir}/${swt_lib}"/>
+        </jar>
+        
+        <echo message="Cleaning up temporary build files..." />
+		<delete dir="./bin/build"/>
+		
+		<!-- 
+	  	<delete includeemptydirs="true">
+  			<fileset dir="./bin">
+  				<exclude name="**/*.jar" />
+  			</fileset>
+  		</delete>
+  		-->
+  		
+  		<echo message="Build done." />	
+  	</target>
+</project>
