@@ -56,7 +56,7 @@ public class UrlLauncher {
 	
 	private static void goForLinux(String url) {
 		String[] browsers = {
-			"firefox", "chromium", "mozilla",
+			"firefox", "chromium-browser", "mozilla",
 			"netscape", "konqueror", "opera"
 		};
 		
