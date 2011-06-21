@@ -1,3 +1,25 @@
+/*
+ * JYald
+ * 
+ * Copyright (C) 2011 Oguz Kartal
+ * 
+ * This file is part of JYald
+ * 
+ * JYald is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * JYald is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JYald.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 package org.jyald.core;
 
 import java.io.BufferedOutputStream;
@@ -21,6 +43,7 @@ public class ProcessObject implements Runnable {
 	private Process workingProcess;
 	private String adbExecFile;
 	private String unit;
+	private String surroundChar = "\"";
 	
 	public ProcessObject(String adbUnit) {
 		workerLock = new Lock();
@@ -28,11 +51,14 @@ public class ProcessObject implements Runnable {
 		running = false;
 		consume = true;
 		unit = adbUnit;
+		
+		if (System.getProperty("file.separator").equals("/"))
+			surroundChar = "'";
 	}
 	
 	private boolean internalStart() {
 		try {
-			workingProcess = Runtime.getRuntime().exec(String.format("\"%s\" %s", adbExecFile,unit));
+			workingProcess = Runtime.getRuntime().exec(String.format("%s %s", adbExecFile,unit));
 		} catch (IOException e) {
 			Log.write(e.getMessage());
 			return false;
@@ -144,7 +170,10 @@ public class ProcessObject implements Runnable {
 	}
 	
 	public void setExecutableFile(String file) {
-		adbExecFile = file;
+		if (!file.contains(" "))
+			adbExecFile = file;
+		else
+			adbExecFile = surroundChar + file + surroundChar;
 	}
 	
 	public void sendToOutputStream(String s) {

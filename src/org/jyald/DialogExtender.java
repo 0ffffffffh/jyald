@@ -20,41 +20,37 @@
  */
 
 
-package org.jyald.debuglog;
+package org.jyald;
 
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.swt.widgets.Shell;
 
-public class DebugLogLevel {	
-	private int logLevel;
+public abstract class DialogExtender extends Dialog {
 	
-	public DebugLogLevel() {
-		logLevel = LogLevel.ALL;
+	public DialogExtender(Shell parent) {
+		super(parent);
 	}
 	
-	private final boolean checkLevel(int level) {
-		if (logLevel==LogLevel.ALL)
-			return true;
+	public DialogExtender(Shell parent, int style) {
+		super(parent, style);
+	}
+
+	public Monitor getMonitor() {
+		return getParent().getDisplay().getPrimaryMonitor();
+	}
+	
+	public void locateCenter() {
+		Rectangle bounds = getMonitor().getBounds();
 		
-		return (logLevel & level) != 0;
+		Rectangle shellRect = getShell().getBounds();
+		
+		getShell().setLocation(bounds.x + (bounds.width - shellRect.width) / 2,
+				bounds.y + (bounds.height - shellRect.height) / 2);
+		
 	}
 	
-	public int setLevel(int level) {
-		int oldLevel;
-		
-		oldLevel = logLevel;
-		logLevel |= level;
-		return oldLevel;
-	}
+	public abstract Shell getShell();
 	
-	public int unsetLevel(int level) {
-		int oldLevel;
-		
-		oldLevel = logLevel;
-		logLevel &= ~level;
-		
-		return oldLevel;
-	}
-	
-	public final boolean isLoggableLevel(int level) {
-		return checkLevel(level);
-	}
 }

@@ -1,3 +1,25 @@
+/*
+ * JYald
+ * 
+ * Copyright (C) 2011 Oguz Kartal
+ * 
+ * This file is part of JYald
+ * 
+ * JYald is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * JYald is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JYald.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 package org.jyald;
 
 import java.util.ArrayList;
@@ -131,7 +153,10 @@ public class MainWindow {
 		removedFilters = dlg.getRemovedFilters();
 		
 		if (removedFilters.getCount() > 0) {
+			tbTabContainer.setSelection(0);
+			
 			for (UserFilterObject currFilter : removedFilters) {
+				
 				logcat.removeSlot(currFilter.getFilterName());
 			}
 		}
@@ -160,6 +185,7 @@ public class MainWindow {
 		userFilters.add(userFilter);
 		
 		filterLoggerUi = new TabContent(tbTabContainer, name, true);
+		
 		
 		UserFilterObject.saveFilters(userFilters, "filters.flt");
 		
@@ -331,7 +357,8 @@ public class MainWindow {
 		mnAboutMenu.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				MsgBox.show(shlMain, "About", "jyald\nauthor: Oguz Kartal \'11", SWT.ICON_INFORMATION);
+				AboutDialog aboutDlg = new AboutDialog(shlMain, SWT.DIALOG_TRIM);
+				aboutDlg.open();
 			}
 		});
 		
