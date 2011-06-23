@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.jyald.util.UrlLauncher;
 
 public class AboutDialog extends DialogExtender {
@@ -39,15 +40,21 @@ public class AboutDialog extends DialogExtender {
 	protected Object result;
 	protected Shell shell;
 	
+	private Font titleFont,normalFont;
+	
 	public AboutDialog(Shell parent, int style) {
 		super(parent, style);
 		setText("About JYald");
 	}
 	
 	public Object open() {
-		createContents();
 		Display display = getParent().getDisplay();
-
+		titleFont = new Font(display,"Arial",14,SWT.BOLD);
+		normalFont = new Font(display,"Verdana",10,SWT.NORMAL);
+		
+		createContents();
+		
+		
 		locateCenter();
 		
 		shell.open();
@@ -67,7 +74,8 @@ public class AboutDialog extends DialogExtender {
 		shell.setText(getText());
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setBounds(72, 10, 297, 26);
+		lblNewLabel.setFont(titleFont);
+		lblNewLabel.setBounds(45, 10, 324, 26);
 		lblNewLabel.setText("JYald (Yet Another Logcat Dumper)");
 		
 		Link link = new Link(shell, SWT.NONE);
@@ -80,11 +88,13 @@ public class AboutDialog extends DialogExtender {
 			
 		});
 		
-		link.setBounds(78, 101, 274, 28);
+		link.setBounds(78, 102, 274, 27);
+		link.setFont(normalFont);
 		link.setText("<a href=\"http://ahmetalpbalkan.com\">Ahmet Alp Balkan</a> for valuable feedbacks.");
 		
 		Label lblSpecialThanks = new Label(shell, SWT.NONE);
-		lblSpecialThanks.setBounds(45, 80, 239, 26);
+		lblSpecialThanks.setBounds(45, 80, 239, 16);
+		lblSpecialThanks.setFont(normalFont);
 		lblSpecialThanks.setText("Special Thanks to;");
 		
 		Button btnOk = new Button(shell, SWT.NONE);
@@ -99,6 +109,7 @@ public class AboutDialog extends DialogExtender {
 		
 		Link link_1 = new Link(shell, SWT.NONE);
 		link_1.setBounds(45, 46, 199, 28);
+		link_1.setFont(normalFont);
 		link_1.setText("Author: <a href=\"http://oguzkartal.net\">Oguz Kartal</a>");
 		link_1.addListener(SWT.Selection, new Listener() {
 
@@ -111,6 +122,7 @@ public class AboutDialog extends DialogExtender {
 		
 		Link link_2 = new Link(shell, SWT.NONE);
 		link_2.setBounds(26, 135, 356, 57);
+		link_2.setFont(normalFont);
 		link_2.setText("This program is distributed under GPL License. You can see source code on the project <a href=\"https://github.com/0ffffffffh/jyald\">GitHub</a> page.");
 		
 		link_2.addListener(SWT.Selection, new Listener() {

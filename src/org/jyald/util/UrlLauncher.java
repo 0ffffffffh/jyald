@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 public class UrlLauncher {
+	private static String linuxBrowser=null;
 	
 	private static Process run(String...args) {
 		
@@ -60,21 +61,21 @@ public class UrlLauncher {
 			"netscape", "konqueror", "opera"
 		};
 		
-		String sysBrowser = null;
-		
-		for (int i=0;i<browsers.length;i++) {
-			try {
-				if (run("which",browsers[i]).waitFor()==0) {
-					sysBrowser = browsers[i];
-					break;
-				}
-			} catch (Exception e) {}
+		if (linuxBrowser == null) {
+			for (int i=0;i<browsers.length;i++) {
+				try {
+					if (run("which",browsers[i]).waitFor()==0) {
+						linuxBrowser = browsers[i];
+						break;
+					}
+				} catch (Exception e) {}
+			}
 		}
 		
-		if (sysBrowser == null)
+		if (linuxBrowser == null)
 			run("./xdg-open",url);
 		else
-			run(sysBrowser,url);
+			run(linuxBrowser,url);
 	}
 	
 	private static void goForWindows(String url) {
