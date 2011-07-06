@@ -28,13 +28,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.jyald.loggingmodel.*;
+import org.jyald.uicomponents.MsgBox;
+import org.jyald.util.StringHelper;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -90,18 +91,21 @@ public class AddNewFilterDialog extends DialogExtender {
 				val = debugType;
 				break;
 			case TagSection:
-			case MessageSection:
+			case MessageSection: {
 				val = txtValue.getText();
+				if (StringHelper.isNullOrEmpty((String)val)) {
+					MsgBox.show(shlAddANew, "Error", "Value textbox cant be empty", SWT.ICON_ERROR);
+					return null;
+				}
 				break;
+			}
 			case PidSection: {
 				try {
 					val = Integer.parseInt(txtValue.getText());
 				}
 				catch(Exception e) {
-					MessageBox exDlg = new MessageBox(shlAddANew,SWT.ICON_ERROR);
-					exDlg.setText("Error");
-					exDlg.setMessage(e.getMessage());
-					exDlg.open();
+					MsgBox.show(shlAddANew, "Error", e.getMessage(), SWT.ICON_ERROR);
+					return null;
 				}
 				break;
 			}
@@ -116,8 +120,11 @@ public class AddNewFilterDialog extends DialogExtender {
 	
 	private void onBtnAddToFilterClick() {
 		LogFilter filter = getFilterObjectFromUI();
-		filters.addFilter(filter);
-		lstFilters.add(filter.toString());
+		
+		if (filter != null) {
+			filters.addFilter(filter);
+			lstFilters.add(filter.toString());
+		}
 	}
 	
 	private void onBtnCancelClick() {

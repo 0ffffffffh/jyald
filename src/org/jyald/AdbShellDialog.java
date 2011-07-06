@@ -101,7 +101,7 @@ public class AdbShellDialog extends DialogExtender {
 		shell.setSize(430, 306);
 		shell.setText(getText());
 		
-		txtShellOutput = new StyledText(shell, SWT.BORDER);
+		txtShellOutput = new StyledText(shell, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		txtShellOutput.setBounds(10, 10, 397, 208);
 		
 		txtCommandInput = new Text(shell, SWT.BORDER);
@@ -119,7 +119,11 @@ public class AdbShellDialog extends DialogExtender {
 		
 		txtShellOutput.append("Please wait. Trying connect to Adb Shell\n");
 		
-		logcatShell.startShell();
+		
+		if (logcatShell.startShell())
+			txtShellOutput.append("Shell created successfuly\n");
+		else
+			txtShellOutput.append("Sorry. Could not created shell process\n");
 		
 	}
 	

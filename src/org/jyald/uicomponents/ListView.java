@@ -26,23 +26,82 @@ package org.jyald.uicomponents;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.*;
 
 public class ListView {
 	TabFolder container; 
 	Table lvListView;
 	java.util.List<ListViewColumn> listViewColumns;
+	Menu menu;
+	MenuItem newItem;
 	
 	public ListView(TabFolder parent) {
 		container = parent;
-		listViewColumns = new ArrayList<ListViewColumn>();
+		listViewColumns = new ArrayList<ListViewColumn>();	
+	}
+	
+	
+	private void clear() {
+		lvListView.clearAll();
+		lvListView.setItemCount(0);
+	}
+	
+	private void initPopupMenu() {
+		menu = new Menu(lvListView);
 		
+		newItem = new MenuItem(menu,SWT.NONE);
+		
+		newItem.setText("Clear logs");
+		lvListView.setMenu(menu);
+		
+		newItem.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent se) {
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent se) {
+				clear();
+			}
+			
+		});
+	}
+	
+	private void showPopupMenu() {
+		lvListView.setMenu(menu);
 	}
 	
 	public void showIn(TabItem tab) {
 		lvListView = new Table(container,SWT.BORDER | SWT.FULL_SELECTION);
 		lvListView.setHeaderVisible(true);
 		tab.setControl(lvListView);
+		
+		initPopupMenu();
+		
+		lvListView.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseDoubleClick(MouseEvent arg0) {
+				
+			}
+
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				
+			}
+
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				if (arg0.button == 3)
+					showPopupMenu();
+			}
+			
+		});
 	}
 	
 	public boolean addColumn(String columnName) {

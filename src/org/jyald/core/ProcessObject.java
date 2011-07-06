@@ -137,23 +137,16 @@ public class ProcessObject implements Runnable {
 				Log.writeByLevel(LogLevel.CORE, "Waiting worker thread to finish #%d",trycount);
 				
 				try {
-					workerLock.waitForLock(500);
+					workerLock.waitForLock(100);
 				}
 				catch (TimedOutException e) {
 					if (trycount <= 0) {
 						Log.writeByLevel(LogLevel.CORE, "Thread finish wait threshold limit exceeded.");
-						/*
-						i think it's gonna to infinite.
-						force stop the process. 
-						it may cause an io exception into worker code block.
-						i'll be catch that excp and the thread will break safely
-						 */
 						internalStop(); 
 						return;
 					}
 					
 					trycount--;
-					//thread.destroy() was deprecated!. why? go get the fuck ur self.
 				}
 			}
 			
