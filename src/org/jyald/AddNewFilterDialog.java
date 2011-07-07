@@ -128,10 +128,16 @@ public class AddNewFilterDialog extends DialogExtender {
 	}
 	
 	private void onBtnCancelClick() {
+		filters.clear();
 		shlAddANew.close();
 	}
 	
 	private void onBtnOkClick() {
+		if (StringHelper.isNullOrEmpty(filterName)) {
+			MsgBox.show(shlAddANew, "Warning", "Filter name can't be empty", SWT.ICON_WARNING);
+			return;
+		}
+		
 		filterName = txtFilterName.getText();
 		linkWithAndState = chkLinkRulesWith.getSelection();
 		shlAddANew.close();

@@ -208,6 +208,14 @@ public class MainWindow {
 			return;
 		}
 		
+		AdbValidatorDialog validatorDlg = new AdbValidatorDialog(shlMain,SWT.DIALOG_TRIM,setting.adbExecutableFile);
+		
+		
+		if (!((Boolean)validatorDlg.open())) {
+			MsgBox.show(shlMain, "Validate error", "It's not an adb executable", SWT.ICON_ERROR);
+			return;
+		}
+		
 		if (Setting.saveSetting(setting)) 
 			MsgBox.show(shlMain,"setting","adb location has been set", SWT.ICON_INFORMATION);
 		else

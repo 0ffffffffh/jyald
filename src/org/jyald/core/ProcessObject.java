@@ -69,7 +69,7 @@ public class ProcessObject implements Runnable {
 	
 	private void internalStop() {
 		if (workingProcess != null) {
-			Log.writeByLevel(LogLevel.CORE, "killing logcat process");
+			Log.writeByLevel(LogLevel.CORE, "killing process");
 			workingProcess.destroy();
 			running = false;
 			workingProcess = null;
