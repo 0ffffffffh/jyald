@@ -163,6 +163,9 @@ public class ProcessObject implements Runnable {
 	}
 	
 	public void setExecutableFile(String file) {
+		if (file == null)
+			return;
+		
 		if (!file.contains(" "))
 			adbExecFile = file;
 		else
