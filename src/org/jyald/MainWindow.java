@@ -216,8 +216,10 @@ public class MainWindow {
 			return;
 		}
 		
-		if (Setting.saveSetting(setting)) 
+		if (Setting.saveSetting(setting))  {
+			logcat.setAdb(setting.adbExecutableFile);
 			MsgBox.show(shlMain,"setting","adb location has been set", SWT.ICON_INFORMATION);
+		}
 		else
 			MsgBox.show(shlMain, "setting", "an error occurred while writing adb location", SWT.ICON_ERROR);
 		

@@ -41,7 +41,7 @@ public class DebugPrintStream extends OutputStream {
 			return;
 		
 		if (val == '\n' || val == 0) {
-			Log.write(sb.toString());
+			Log.writeByLevel(LogLevel.EXCEPTION,sb.toString());
 			sb.delete(0, sb.length());
 			return;
 		}
@@ -56,7 +56,7 @@ public class DebugPrintStream extends OutputStream {
 		if (buf.contains(StringHelper.NEW_LINE))
 			return;
 		
-		Log.write(buf);
+		Log.writeByLevel(LogLevel.EXCEPTION,buf);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class DebugPrintStream extends OutputStream {
 		if (lineBuf.contains(StringHelper.NEW_LINE))
 			return;
 		
-		Log.write(lineBuf);
+		Log.writeByLevel(LogLevel.EXCEPTION,lineBuf);
 	}
 	
 }

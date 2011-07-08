@@ -98,7 +98,6 @@ public class Log {
 	
 	public static void setLogLevel(int level) {
 		_logLevel.setLevel(level);
-		
 	}
 	
 	public static PrintStream getPrintStreamInstance() {
@@ -108,8 +107,6 @@ public class Log {
 		
 		return _stream;
 	}
-	
-	
 	
 	public static void finish() {
 		Log.write("Logging system finishing");

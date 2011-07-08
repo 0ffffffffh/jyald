@@ -31,6 +31,7 @@ import org.jyald.debuglog.Log;
 
 public class Setting implements Serializable {
 	public String adbExecutableFile;
+	public int debugLevel;
 	
 	public static Setting loadSetting() {
 		Setting setting;
