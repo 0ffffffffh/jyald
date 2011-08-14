@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import org.jyald.debuglog.Log;
+import org.jyald.util.Helper;
 
 public class Setting implements Serializable {
 	public String adbExecutableFile;
@@ -37,7 +38,7 @@ public class Setting implements Serializable {
 		Setting setting;
 		
 		try {
-			FileInputStream fsi = new FileInputStream("settings.stg");
+			FileInputStream fsi = new FileInputStream(Helper.getWorkingDir() + "/settings.stg");
 			ObjectInputStream ois = new ObjectInputStream(fsi);
 			setting = (Setting)ois.readObject();
 			ois.close();
@@ -53,7 +54,7 @@ public class Setting implements Serializable {
 	
 	public static boolean saveSetting(Setting setting) {
 		try {
-			FileOutputStream fso = new FileOutputStream("settings.stg");
+			FileOutputStream fso = new FileOutputStream(Helper.getWorkingDir() + "/settings.stg");
 			ObjectOutputStream oos = new ObjectOutputStream(fso);
 			oos.writeObject(setting);
 			oos.close();

@@ -28,6 +28,8 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.jyald.util.Helper;
 import org.jyald.util.StringHelper;
 
 public class Log {
@@ -57,11 +59,13 @@ public class Log {
 	
 	private static void internalWrite(String format, boolean forceWriteToDisk, Object...objects) {
 		String logLine;
+		String logFile = Helper.getWorkingDir() + "/jyald-deblog.txt";
+		boolean append = Helper.fileExist(logFile);
 		
 		if (forceWriteToDisk || (_logBuffer.length() >= 5 * 1024)) {
 			
 			try {
-				FileWriter fw = new FileWriter("jyald-deblog.txt",true);
+				FileWriter fw = new FileWriter(logFile,append);
 				fw.write(_logBuffer.toString());
 				fw.close();
 			} catch (IOException e) {

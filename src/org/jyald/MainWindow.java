@@ -112,7 +112,6 @@ public class MainWindow {
 		
 		parseCommandLine(args);
 		
-		
 		try {
 			MainWindow window = new MainWindow();
 			window.open();

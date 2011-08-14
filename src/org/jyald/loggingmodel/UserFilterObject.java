@@ -29,6 +29,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.jyald.debuglog.Log;
+import org.jyald.util.Helper;
 import org.jyald.util.IterableArrayList;
 
 
@@ -38,6 +39,8 @@ public class UserFilterObject implements Serializable {
 	private boolean rulesLinkState;
 	
 	public static boolean saveFilters(IterableArrayList<UserFilterObject> userFilters, String fileName) {
+		
+		fileName = Helper.getWorkingDir() + "/" + fileName;
 		
 		try {
 			FileOutputStream fso = new FileOutputStream(fileName);
@@ -57,6 +60,8 @@ public class UserFilterObject implements Serializable {
 	@SuppressWarnings("unchecked")
 	public static IterableArrayList<UserFilterObject> loadFilters(String fileName) {
 		IterableArrayList<UserFilterObject> filterObj = null;
+		
+		fileName = Helper.getWorkingDir() + "/" + fileName;
 		
 		try {
 			FileInputStream fsi = new FileInputStream(fileName);
