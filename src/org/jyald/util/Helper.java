@@ -13,7 +13,7 @@ public class Helper {
 		
 		if (workingDir == null) {
 			String path = Helper.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-			path = path.substring(1, path.length()-1);
+			
 			path = path.replace("%20", " ");
 		
 			if (path.contains(".")) {
